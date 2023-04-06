@@ -1,3 +1,3 @@
-from OthelloBoard import Othello
+from othello.OthelloBoard import Othello
 
 Othello().print_board()
