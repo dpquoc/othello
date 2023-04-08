@@ -1,4 +1,4 @@
-from othello.OthelloBoard import OthelloBoard
+from OthelloBoard import OthelloBoard
 
 class OthelloState():
     
