@@ -1,16 +1,16 @@
 import numpy as np
 
-
 class RandomPlayer():
     def __init__(self):
         pass
         
     def play(self, board, current_player, remain_time):
-        a = np.random.randint(self.game.getActionSize())
-        valids = self.game.getValidMoves(board, 1)
-        while valids[a]!=1:
-            a = np.random.randint(self.game.getActionSize())
-        return a
+        actions = board.get_legal_moves(current_player)
+        if len(actions) == 0:
+            return None
+        i = np.random.randint(len(actions))
+        print(actions[i])
+        return actions[i]
 
 class GreedyPlayer():
     def __init__(self):

@@ -50,21 +50,20 @@ class OthelloBoard():
         return legal_moves
 
     def execute_move(self, move, player):
-        new_board = np.copy(self.board)
-        opponent = -player
+        # opponent = -player
         
         # create an array of all cells where the player has a piece
         player_cells = np.where(self.board == player, 1, 0)
 
-        # create an array of all cells where the opponent has a piece
-        opponent_cells = np.where(self.board == opponent, 1, 0)
+        # # create an array of all cells where the opponent has a piece
+        # opponent_cells = np.where(self.board == opponent, 1, 0)
 
         # create an array of all cells that are empty
         empty_cells = np.where(self.board == 0, 1, 0)
 
         # update the new board with the new piece
         r, c = move
-        new_board[r][c] = player
+        self.board[r][c] = player
 
         # flip opponent pieces as necessary
         for dr, dc in OthelloBoard.directions:
@@ -82,11 +81,11 @@ class OthelloBoard():
                     break
                 if player_cells[r2][c2]:
                     for fr, fc in to_flip:
-                        new_board[fr][fc] = player
+                        self.board[fr][fc] = player
                     break
                 to_flip.append((r2, c2))
 
-        return new_board
+        return self.board
 
     def evaluate(self, player):
         pass
@@ -113,10 +112,10 @@ class OthelloBoard():
             print(i, end=" ")
         print()
 
-board = OthelloBoard()
-board.print_board()
-print(board.get_legal_moves(1))
-print(board.execute_move((2,3), 1))
+# board = OthelloBoard()
+# board.print_board()
+# print(board.get_legal_moves(1))
+# print(board.execute_move((2,3), 1))
 
 
 
