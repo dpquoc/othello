@@ -87,9 +87,42 @@ class OthelloBoard():
 
         return self.board
 
-    def evaluate(self, player):
-        pass
+    def coin_parity_evaluate(self):
+        # If playerX_pieces (notation: 1) < playerO_pieces (notation: -1) => Coin Parity < 0 => Advantages for playerO_pieces.
+        # If playerX_pieces (notation: 1) > playerO_pieces (notation: -1) => Coin Parity > 0 => Advantages for playerX_pieces.
+
+        playerX_pieces = np.sum(self.board == 1)
+        playerO_pieces = np.sum(self.board == -1)
+        coin_parity_heuristic_value = 100 * (playerX_pieces - playerO_pieces) / (playerX_pieces + playerO_pieces)
+        return coin_parity_heuristic_value
     
+    def corners_captured_evaluate(self):
+        playerX_corners_pieces = 0
+        playerY_corners_pieces = 0
+        corners_heuristic_value = 0
+
+        for i in self.board:
+            for j in i:
+                if i == 0:
+                    if j == 0 or j == self.board_size - 1:
+                        if self.board[i, j] == 1:
+                            playerX_corners_pieces += 1
+                        elif self.board[i, j] == -1:
+                            playerY_corners_pieces += 1
+                elif i == self.board_size - 1:
+                    if j == 0 or j == self.board_size - 1:
+                        if self.board[i, j] == 1:
+                            playerX_corners_pieces += 1
+                        elif self.board[i, j] == -1:
+                            playerY_corners_pieces += 1
+        
+        if playerX_corners_pieces == 0 and playerY_corners_pieces == 0:
+            return corners_heuristic_value
+        else:
+            corners_heuristic_value = 100 * (playerX_corners_pieces - playerY_corners_pieces) / (playerX_corners_pieces + playerY_corners_pieces)
+            return corners_heuristic_value
+        
+        
     def print_board(self):
         print("    ", end="")
         for i in range(self.board_size):
