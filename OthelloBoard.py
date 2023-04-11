@@ -87,6 +87,50 @@ class OthelloBoard():
 
         return self.board
 
+    def current_mobi_eval(self, player):
+        player_curr_mobi = len(self.get_legal_moves(player))
+        opponent_curr_mobi = len(self.get_legal_moves(-player))
+
+        if (player_curr_mobi + opponent_curr_mobi != 0):
+            return 100 * (player_curr_mobi - opponent_curr_mobi) / (player_curr_mobi + opponent_curr_mobi) 
+        else: 
+            return 0
+
+    def potential_mobi_eval(self, player):
+        player_potent_mobi = 0
+        opponent_potent_mobi = 0
+
+        # Duyệt tất cả các cell
+        for i in range(self.board_size):
+            for j in range(self.board_size):
+                # Nếu cell là empty
+                if self.board[i][j] == 0:
+                    check_player_done = False
+                    check_opponent_done = False
+                    # Kiểm tra tất cả các hướng
+                    for dr, dc in OthelloBoard.directions:
+                        if check_opponent_done and check_player_done:
+                            break
+
+                        r2, c2 = i + dr, j + dc
+                        
+                        if r2 < 0 or r2 >= self.board_size or c2 < 0 or c2 >= self.board_size:
+                            continue
+                        
+                        if self.board[r2][c2] == player and not check_player_done:
+                            player_potent_mobi += 1
+                            check_player_done = True
+
+                        if self.board[r2][c2] == -player and not check_opponent_done:
+                            opponent_potent_mobi += 1
+                            check_opponent_done = True
+
+        if (player_potent_mobi + opponent_potent_mobi != 0):
+            return 100 * (player_potent_mobi - opponent_potent_mobi) / (player_potent_mobi + opponent_potent_mobi) 
+        else: 
+            return 0
+
+
     def evaluate(self, player):
         pass
     
@@ -112,10 +156,10 @@ class OthelloBoard():
             print(i, end=" ")
         print()
 
-# board = OthelloBoard()
-# board.print_board()
-# print(board.get_legal_moves(1))
-# print(board.execute_move((2,3), 1))
+
+
+    
+
 
 
 
