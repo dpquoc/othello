@@ -132,7 +132,33 @@ class OthelloBoard():
 
 
     def evaluate(self, player):
-        pass
+        opponent = -player
+        
+        player_count = np.sum(self.board == player)
+        opponent_count = np.sum(self.board == opponent)
+        
+        # calculate the coin parity heuristic value
+        coin_parity_value = 100 * (player_count - opponent_count) / (player_count + opponent_count)
+        
+        # calculate the corner heuristic value
+        corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
+        max_corner_value = 0
+        min_corner_value = 0
+        
+        for corner in corners:
+            if self.board[corner] == player:
+                max_corner_value += 1
+            elif self.board[corner] == opponent:
+                min_corner_value += 1
+        
+        if (max_corner_value + min_corner_value) != 0:
+            corner_heuristic_value = 100 * (max_corner_value - min_corner_value) / (max_corner_value + min_corner_value)
+        else:
+            corner_heuristic_value = 0
+            
+        return coin_parity_value + corner_heuristic_value
+
+
     
     def print_board(self):
         print("    ", end="")

@@ -25,6 +25,7 @@ class OthelloGame():
             if player1_action != None :
                 board.execute_move(player1_action, 1)
                 player1_can_move = True
+                print(f"Player 1 ({type(self.player1).__name__}) chose move {player1_action} in {round(end_time - start_time, 2)} seconds.")
             else:
                 player1_can_move = False
             
@@ -38,6 +39,7 @@ class OthelloGame():
             if player2_action != None :
                 board.execute_move(player2_action, -1)
                 player2_can_move = True
+                print(f"Player 2 ({type(self.player2).__name__}) chose move {player2_action} in {round(end_time - start_time, 2)} seconds.")
             else:
                 player2_can_move = False
             
