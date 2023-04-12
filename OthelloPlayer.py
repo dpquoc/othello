@@ -44,18 +44,15 @@ class AlphaBetaPlayer():
         pass
         
     def play(self, board, current_player, remain_time):
-        state = OthelloState(board, current_player, True)
-        value, best_child = self.alphabeta(state, 3, float('-inf'), float('inf'), True)
-        
-        if len(state.children) == 0:
+        init_state = OthelloState(board, current_player, True)
+        value, best_child = self.alphabeta(init_state, 4, float('-inf'), float('inf'), True)
+
+        if len(init_state.children) == 0:
             return None
         else:
-            for child in state.children:
-                if np.array_equal(child.board.board, best_child.board.board):
-                    return best_child.from_action
+           return best_child.from_action
 
     def alphabeta(self, state, depth, alpha, beta, maximizing_player):
-        state.get_children()
         if depth == 0:
             return state.evaluate(), None
         state.get_children()
