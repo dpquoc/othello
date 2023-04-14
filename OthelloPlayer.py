@@ -1,5 +1,7 @@
 import numpy as np
 import copy
+import threading
+import time
 from OthelloState import OthelloState
 import time 
 
@@ -46,20 +48,39 @@ class AlphaBetaPlayer():
         pass
         
     def play(self, board, current_player, remain_time):
-        state = OthelloState(board, current_player, True)
-        self.start_time = time.time()
-        value, best_child = self.alphabeta(state, 2, float('-inf'), float('inf'), True)
-        print(time.time() - self.start_time)
+        min_depth = 2
+        max_depth = 5
+        start_time = time.time()
+        init_state = OthelloState(board, current_player, True)
 
-        if len(state.children) == 0:
-            return None
-        else:
-            for child in state.children:
-                if np.array_equal(child.board.board, best_child.board.board):
-                    return best_child.from_action
-
-    def alphabeta(self, state, depth, alpha, beta, maximizing_player):
-        state.get_children()
+        results = {}
+        threads = []
+        for depth in range(min_depth, max_depth + 1):
+            t = threading.Thread(target=self.run_alphabeta, args=(init_state, depth, results, start_time))
+            t.start()
+            threads.append(t)
+        
+        for t in threads:
+            t.join()
+            
+        for depth in range(max_depth, min_depth - 1, -1):
+            best_child = results[depth]
+            if best_child != "Out of time":
+                # print(depth)
+                if best_child == None:
+                    return None
+                return best_child.from_action
+            
+        
+    
+    def run_alphabeta(self, state, depth, results, start_time):
+        value, best_child = self.alphabeta(copy.deepcopy(state), depth, float('-inf'), float('inf'), True, start_time)
+        results[depth] = best_child
+        
+    def alphabeta(self, state, depth, alpha, beta, maximizing_player, start_time):
+        if time.time() - start_time >= 2.8 :
+            return -123456 , "Out of time"
+        
         if depth == 0:
             return state.evaluate(), None
         state.get_children()
@@ -73,7 +94,11 @@ class AlphaBetaPlayer():
             best_child = None
             value = float('-inf')
             for child in state.children:
-                child_value, _ = self.alphabeta(child, depth - 1, alpha, beta, False)
+                child_value, _ = self.alphabeta(child, depth - 1, alpha, beta, False, start_time)
+                
+                if child_value == -123456 :
+                    return -123456 , "Out of time"
+                
                 if child_value > value:
                     value = child_value
                     best_child = child
@@ -85,7 +110,9 @@ class AlphaBetaPlayer():
             best_child = None
             value = float('inf')
             for child in state.children:
-                child_value, _ = self.alphabeta(child, depth - 1, alpha, beta, True)
+                child_value, _ = self.alphabeta(child, depth - 1, alpha, beta, True, start_time)
+                if child_value == -123456 :
+                    return -123456 , "Out of time"
                 if child_value < value:
                     value = child_value
                     best_child = child

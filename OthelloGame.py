@@ -25,7 +25,7 @@ class OthelloGame():
             if player1_action != None :
                 board.execute_move(player1_action, 1)
                 player1_can_move = True
-                print(f"Player 1 ({type(self.player1).__name__}) chose move {player1_action} in {round(end_time - start_time, 2)} seconds. Remain Time: {player1_time}")
+                print(f"Player 1 ({type(self.player1).__name__}) chose move {player1_action} in {round(end_time - start_time, 2)} seconds.", end=" | ")
             else:
                 player1_can_move = False
             
@@ -50,13 +50,14 @@ class OthelloGame():
                 player2_pieces = np.sum(board.board == -1)
                 
                 board.print_board()
+
                 if player1_pieces > player2_pieces:
-                    print(f"Player 1: {player1_pieces}. {type(self.player1).__name__} wins!")
-                    print(f"Player 2: {player2_pieces}. {type(self.player2).__name__} loses!")
+                    print(f"Player 1: {player1_pieces}. {type(self.player1).__name__} wins! ({round(player1_time, 2)} seconds left)")
+                    print(f"Player 2: {player2_pieces}. {type(self.player2).__name__} loses! ({round(player2_time, 2)} seconds left)")
                     
                 elif player2_pieces > player1_pieces:
-                    print(f"Player 1: {player1_pieces}. {type(self.player1).__name__} loses!")
-                    print(f"Player 2: {player2_pieces}. {type(self.player2).__name__} wins!")
+                    print(f"Player 1: {player1_pieces}. {type(self.player1).__name__} loses! ({round(player1_time, 2)} seconds left)")
+                    print(f"Player 2: {player2_pieces}. {type(self.player2).__name__} wins! ({round(player2_time, 2)} seconds left)")
                 else:
                     print("The game is a tie!")    
                 break
