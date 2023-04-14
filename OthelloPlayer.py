@@ -1,6 +1,8 @@
 import numpy as np
 import copy
 from OthelloState import OthelloState
+import time 
+
 
 class RandomPlayer():
     def __init__(self):
@@ -45,8 +47,10 @@ class AlphaBetaPlayer():
         
     def play(self, board, current_player, remain_time):
         state = OthelloState(board, current_player, True)
-        value, best_child = self.alphabeta(state, 3, float('-inf'), float('inf'), True)
-        
+        self.start_time = time.time()
+        value, best_child = self.alphabeta(state, 2, float('-inf'), float('inf'), True)
+        print(time.time() - self.start_time)
+
         if len(state.children) == 0:
             return None
         else:
@@ -60,6 +64,9 @@ class AlphaBetaPlayer():
             return state.evaluate(), None
         state.get_children()
         if len(state.children) == 0:
+            return state.evaluate(), None
+
+        if time.time() - self.start_time >= 2.9:
             return state.evaluate(), None
 
         if maximizing_player:
