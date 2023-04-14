@@ -87,6 +87,59 @@ class OthelloBoard():
 
         return self.board
 
+    # def coin_parity_evaluate(self, player):
+    #     opponent = -player
+        
+    #     player_count = np.sum(self.board == player)
+    #     opponent_count = np.sum(self.board == opponent)
+        
+    #     # calculate the coin parity heuristic value
+    #     coin_parity_value = 100 * (player_count - opponent_count) / (player_count + opponent_count)
+    #     return coin_parity_value
+    
+    def is_potential(self, player, corner):
+        opponent = -player
+
+        if corner == (0, 0):
+            if self.board[0][1] == self.board[1][0] == self.board[1][1] == opponent: return True
+        elif corner == (0, 7):
+            if self.board[0][6] == self.board[1][6] == self.board[1][7] == opponent: return True
+        elif corner == (7, 0):
+            if self.board[6][0] == self.board[6][1] == self.board[7][1] == opponent: return True
+        else:
+            if self.board[7][6] == self.board[6][6] == self.board[6][7] == opponent: return True
+        
+        return False
+
+    # def corners_captured_evaluate(self, player):
+    #     opponent = -player
+
+    #     # calculate the corner heuristic value
+    #     corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
+    #     max_corner_value = 0
+    #     min_corner_value = 0
+
+    #     for corner in corners:
+    #         if self.board[corner] == player:
+    #             max_corner_value += 10
+    #         elif self.board[corner] == opponent:
+    #             min_corner_value += 10
+    #         else:
+    #             if self.is_potential(player, corner):
+    #                 max_corner_value += 4
+    #             elif not self.is_potential(player, corner) and self.is_potential(opponent, corner):
+    #                 min_corner_value += 4
+                        
+    #     if (max_corner_value + min_corner_value) != 0:
+    #         corner_heuristic_value = 100 * (max_corner_value - min_corner_value) / (max_corner_value + min_corner_value)
+    #     else:
+    #         corner_heuristic_value = 0
+        
+                    
+
+
+
+
     def evaluate(self, player):
         opponent = -player
         
@@ -103,9 +156,14 @@ class OthelloBoard():
         
         for corner in corners:
             if self.board[corner] == player:
-                max_corner_value += 1
+                max_corner_value += 10
             elif self.board[corner] == opponent:
-                min_corner_value += 1
+                min_corner_value += 10
+            else:
+                if self.is_potential(player, corner):
+                    max_corner_value += 4
+                elif not self.is_potential(player, corner) and self.is_potential(opponent, corner):
+                    min_corner_value += 4
         
         if (max_corner_value + min_corner_value) != 0:
             corner_heuristic_value = 100 * (max_corner_value - min_corner_value) / (max_corner_value + min_corner_value)
