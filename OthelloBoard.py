@@ -175,22 +175,22 @@ class OthelloBoard():
 
     def is_unstable(self, i, j): pass
 
-    def stability(self):
+    def stability(self, cur_player):
         player = 0
         opponent = 0
         size = len(self.board_size)
         for i in range(size):
             for j in range(size):
-                if self.board[i][j] == 1:
-                    if self.is_stable(i, j, 1):
+                if self.board[i][j] == cur_player:
+                    if self.is_stable(i, j, cur_player):
                         player += 1
                     else:
                         player -= 1
                 else:
-                    if self.is_stable(i, j, -1):
-                        player += 1
+                    if self.is_stable(i, j, -cur_player):
+                        opponent += 1
                     else:
-                        player -= 1
+                        opponent -= 1
         if player + opponent == 0:
             return 0
         else:
