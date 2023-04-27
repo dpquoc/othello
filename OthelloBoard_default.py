@@ -155,22 +155,11 @@ class OthelloBoard():
             corner_heuristic_value = 100 * (max_corner_value - min_corner_value) / (max_corner_value + min_corner_value)
         else:
             corner_heuristic_value = 0
-        
-        # Mobility
-
-        # player_curr_mobi = len(self.get_legal_moves(player))
-        # opponent_curr_mobi = len(self.get_legal_moves(-player))
-
-        # if (player_curr_mobi + opponent_curr_mobi != 0):
-        #     mobi_score = 100 * (player_curr_mobi - opponent_curr_mobi) / (player_curr_mobi + opponent_curr_mobi) 
-        # else: 
-        #     mobi_score = 0
-
-        #mobi_score = self.current_mobi_eval(player) + self.potential_mobi_eval(player)
-
-        return coin_parity_value + corner_heuristic_value #+ mobi_score
+            
+        return coin_parity_value + corner_heuristic_value
 
 
+    
     def print_board(self):
         print("    ", end="")
         for i in range(self.board_size):
@@ -194,109 +183,6 @@ class OthelloBoard():
         print()
 
 
-    # STABILITY HEURISTIC FUNCTION PART
-    def row_detector(self, i, j, cur_player):
-        # True: Stable, False: Not stable
-        size = self.board_size - 1
-        left = j - 1
-        right = j + 1
-        while left > 0 and self.board[i][left] == cur_player:
-            left -= 1
-        while right < size  and self.board[i][right] == cur_player:
-            right += 1
-        
-        if self.board[i][left] == -cur_player and self.board[i][right] == 0:
-            return False
-        elif self.board[i][left] == 0 and self.board[i][right] == -cur_player:
-            return False
-        else:
-            return True
-
-    def column_detector(self, i, j, cur_player):
-        # True: Stable, False: Not stable
-        size = self.board_size - 1
-        up = i + 1
-        down = i - 1
-        while up > 0 and self.board[up][j] == cur_player:
-            up -= 1
-        while down < size and self.board[down][j] == cur_player:
-            down += 1
-        if self.board[up][j] == -cur_player and self.board[down][j] == 0:
-            return False
-        elif self.board[up][j] == 0 and self.board[down][j] == -cur_player:
-            return False
-        else:
-            return True
-
-    def diagonal_detector(self, i, j, cur_player):
-        size = self.board_size - 1
-        n = i - 1
-        s = i + 1
-        w = j - 1 
-        e = j + 1
-        while w > 0 and n > 0 and self.board[n][w] == cur_player:
-            w -= 1
-            n -= 1
-        while s < size and e < size and self.board[s][e] == cur_player:
-            s += 1
-            e += 1
-        if self.board[n][w] == -cur_player and self.board[s][e] == 0:
-            return False
-        elif self.board[n][w] == 0 and self.board[s][e] == -cur_player:
-            return False
-        
-        n = i - 1
-        s = i + 1
-        w = j - 1
-        e = j + 1
-        while n > 0 and e < size and self.board[n][e] == cur_player:
-            n -= 1
-            e += 1
-        while s < size and w > 0 and self.board[s][w] == cur_player:
-            s += 1
-            w -= 1
-        if self.board[n][e] == -cur_player and self.board[s][w] == 0:
-            return False
-        elif self.board[n][e] == 0 and self.board[s][w] == -cur_player:
-            return False
-        else:
-            return True
-        
-    def is_stable(self, i, j, cur_player):
-        size = self.board_size - 1
-        corner_set = {(0, 0), (0, size), (size, 0),
-                      (size, size)}
-        if (i, j) in corner_set:
-            return True
-        elif i == 0 or i == size:
-            return self.row_detector(i, j, cur_player)
-        elif j == 0 or j == size:
-            return self.column_detector(i, i, cur_player)
-        else:
-            return self.row_detector(i, j, cur_player) and self.column_detector(i, j, cur_player) and self.diagonal_detector(i, j, cur_player)
-
-
-    def stability(self, cur_player):
-        player = 0
-        opponent = 0
-        size = self.board_size
-        for i in range(size):
-            for j in range(size):
-                if self.board[i][j] == cur_player:
-                    if self.is_stable(i, j, cur_player):
-                        player += 1
-                    else:
-                        player -= 1
-                else:
-                    if self.is_stable(i, j, -cur_player):
-                        opponent += 1
-                    else:
-                        opponent -= 1
-        if player + opponent == 0:
-            return 0
-        else:
-            return 100 * (player - opponent) / (player + opponent)
-    # ----------- END ---------------
 
     
 
