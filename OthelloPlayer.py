@@ -124,4 +124,23 @@ class HumanPlayer():
         pass
         
     def play(self, board, current_player, remain_time):
-        pass
+        actions = board.get_legal_moves(current_player)
+        board.print_board()
+        if not actions:
+            print("No valid moves available. Press any key to continue.")
+            input()
+            return None
+        print("Available moves:")
+        for i, move in enumerate(actions):
+            print(f"{i}: {move}")
+        while True:
+            try:
+                choice = int(input("Enter the index of your move: "))
+                if choice < 0 or choice >= len(actions):
+                    raise ValueError
+                return actions[choice]
+            except ValueError:
+                print("Invalid input. Please enter a valid index.")
+                print("Available moves:")
+                for i, move in enumerate(actions):
+                    print(f"{i}: {move}")
