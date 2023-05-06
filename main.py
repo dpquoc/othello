@@ -1,12 +1,12 @@
 import argparse
 from OthelloGame import OthelloGame
-from OthelloPlayer import RandomPlayer, GreedyPlayer, AlphaBetaPlayer, HumanPlayer
+from OthelloPlayer import RandomPlayer, GreedyPlayer, AlphaBetaPlayer, HumanPlayer, TestPlayer
 
 def main():
     parser = argparse.ArgumentParser(description='Play Othello')
-    parser.add_argument('--player1', type=str, default='random', choices=['random', 'greedy', 'alphabeta', 'human'],
+    parser.add_argument('--player1', type=str, default='random', choices=['random', 'greedy', 'alphabeta', 'human', 'test'],
                         help='player 1 type')
-    parser.add_argument('--player2', type=str, default='random', choices=['random', 'greedy', 'alphabeta', 'human'],
+    parser.add_argument('--player2', type=str, default='random', choices=['random', 'greedy', 'alphabeta', 'human', 'test'],
                         help='player 2 type')
     parser.add_argument('--time', type=int, default=60,
                         help='time limit for each player in seconds')
@@ -18,6 +18,8 @@ def main():
         player1 = GreedyPlayer()
     elif args.player1 == 'alphabeta':
         player1 = AlphaBetaPlayer()
+    elif args.player1 == 'test':
+        player1 = TestPlayer()
     else:
         player1 = HumanPlayer()
     
@@ -27,6 +29,8 @@ def main():
         player2 = GreedyPlayer()
     elif args.player2 == 'alphabeta':
         player2= AlphaBetaPlayer()
+    elif args.player2 == 'test':
+        player2 = TestPlayer()
     else:
         player2 = HumanPlayer()
         
