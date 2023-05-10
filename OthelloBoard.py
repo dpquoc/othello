@@ -139,10 +139,10 @@ class OthelloBoard():
             print(i, end=" ")
         print()
     
-    def stringRepresentation(self):
+    def string_represent(self):
         return self.board.tostring()
 
-    def getGameEnded(self, player):
+    def is_game_end(self, player):
         if len(self.get_legal_moves(player)) != 0:
             return 0
         if len(self.get_legal_moves(-player)) != 0:
@@ -155,10 +155,8 @@ class OthelloBoard():
             return 1
         return -1
     
-    def getCanonicalForm(self, next_player):
-        return self.board*next_player
     
-    def getNextState(self, action, player):
+    def get_next_state(self, action, player):
         
         if action == 64:
             return (self.board, -player)
@@ -167,7 +165,7 @@ class OthelloBoard():
         temp.execute_move(move, player)
         return (temp.board, -player)
     
-    def getValidMoves(self, player):
+    def get_valid_moves(self, player):
         # return a fixed size binary vector
         valids = [0]*65
         legalMoves =  self.get_legal_moves(1)
@@ -178,10 +176,7 @@ class OthelloBoard():
             valids[8*x+y]=1
         return np.array(valids)
     
-# board = OthelloBoard()
-# board.print_board()
-# print(board.get_legal_moves(1))
-# print(board.execute_move((2,3), 1))
+
 
 
 

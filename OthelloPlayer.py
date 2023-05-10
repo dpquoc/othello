@@ -130,20 +130,8 @@ class AlphaBetaPlayer():
 
 
 args = dotdict({
-    'numIters': 1000,
-    'numEps': 100,              # Number of complete self-play games to simulate during a new iteration.
-    'tempThreshold': 15,        #
-    'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
-    'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.
-    'numMCTSSims': 25,          # Number of games moves for MCTS to simulate.
-    'arenaCompare': 40,         # Number of games to play during arena play to determine if new net will be accepted.
+    'MCTS_iterations': 40,
     'cpuct': 1,
-
-    'checkpoint': './temp/',
-    'load_model':True,
-    'load_folder_file': ('pretrained_models/othello/pytorch/','model.pth'),
-    'numItersForTrainExamplesHistory': 20,
-
 })
 
 
@@ -152,10 +140,17 @@ class AlphaZeroPlayer():
         pass
         
     def play(self, board, current_player, remain_time):
+        if isinstance(board, np.ndarray):
+            pass
+        elif isinstance(board, (list, tuple)):
+           board = np.array(board)
+           
+        
         temp_board = OthelloBoard(board)
         actions = temp_board.get_legal_moves(current_player)
         if not actions:
             return None
+        
         
         a = NNetWrapper() 
         a.load_checkpoint('model.pth')

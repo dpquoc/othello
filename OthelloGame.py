@@ -62,7 +62,7 @@ class OthelloGame():
                     print("The game is a tie!")    
                 break
             
-    def getNextState(self, board, player, action):
+    def get_next_state(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
         if action == None:
