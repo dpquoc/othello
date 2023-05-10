@@ -1,4 +1,5 @@
 import numpy as np
+import copy 
 
 class OthelloBoard():
     
@@ -137,7 +138,46 @@ class OthelloBoard():
         for i in range(self.board_size):
             print(i, end=" ")
         print()
+    
+    def stringRepresentation(self):
+        return self.board.tostring()
 
+    def getGameEnded(self, player):
+        if len(self.get_legal_moves(player)) != 0:
+            return 0
+        if len(self.get_legal_moves(-player)) != 0:
+            return 0
+        
+        player_count = np.sum(self.board == player)
+        opponent_count = np.sum(self.board == -player)
+        
+        if player_count > opponent_count :
+            return 1
+        return -1
+    
+    def getCanonicalForm(self, next_player):
+        return self.board*next_player
+    
+    def getNextState(self, action, player):
+        
+        if action == 64:
+            return (self.board, -player)
+        temp = copy.deepcopy(self)
+        move = (int(action/8), action%8)
+        temp.execute_move(move, player)
+        return (temp.board, -player)
+    
+    def getValidMoves(self, player):
+        # return a fixed size binary vector
+        valids = [0]*65
+        legalMoves =  self.get_legal_moves(1)
+        if len(legalMoves)==0:
+            valids[-1]=1
+            return np.array(valids)
+        for x, y in legalMoves:
+            valids[8*x+y]=1
+        return np.array(valids)
+    
 # board = OthelloBoard()
 # board.print_board()
 # print(board.get_legal_moves(1))

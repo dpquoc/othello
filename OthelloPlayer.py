@@ -3,12 +3,21 @@ import copy
 import threading
 import time
 from OthelloState import OthelloState
+from OthelloBoard import OthelloBoard
+from NNet import NNetWrapper
+from MCTS import MCTS
+from utils import *
+
+
+
+
 
 class RandomPlayer():
     def __init__(self):
         pass
         
     def play(self, board, current_player, remain_time):
+        board = OthelloBoard(board)
         actions = board.get_legal_moves(current_player)
         if len(actions) == 0:
             return None
@@ -20,6 +29,7 @@ class GreedyPlayer():
         pass
         
     def play(self, board, current_player, remain_time):
+        board = OthelloBoard(board)
         actions = board.get_legal_moves(current_player)
         
         if not actions:
@@ -49,6 +59,7 @@ class AlphaBetaPlayer():
         min_depth = 2
         max_depth = 5
         start_time = time.time()
+        board = OthelloBoard(board)
         init_state = OthelloState(board, current_player, True)
 
         results = {}
@@ -117,11 +128,51 @@ class AlphaBetaPlayer():
             return value, best_child
 
 
+
+args = dotdict({
+    'numIters': 1000,
+    'numEps': 100,              # Number of complete self-play games to simulate during a new iteration.
+    'tempThreshold': 15,        #
+    'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
+    'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.
+    'numMCTSSims': 25,          # Number of games moves for MCTS to simulate.
+    'arenaCompare': 40,         # Number of games to play during arena play to determine if new net will be accepted.
+    'cpuct': 1,
+
+    'checkpoint': './temp/',
+    'load_model':True,
+    'load_folder_file': ('pretrained_models/othello/pytorch/','model.pth'),
+    'numItersForTrainExamplesHistory': 20,
+
+})
+
+
+class AlphaZeroPlayer():
+    def __init__(self):
+        pass
+        
+    def play(self, board, current_player, remain_time):
+        temp_board = OthelloBoard(board)
+        actions = temp_board.get_legal_moves(current_player)
+        if not actions:
+            return None
+        
+        a = NNetWrapper() 
+        a.load_checkpoint('model.pth')
+
+        probs = MCTS(OthelloBoard(), a, args).getActionProb(board*current_player, 0)
+        index = np.argmax(probs)
+        
+        if index == 64:
+            return None
+        return (int(index/8), index%8)
+              
 class HumanPlayer():
     def __init__(self):
         pass
         
     def play(self, board, current_player, remain_time):
+        board = OthelloBoard(board)
         actions = board.get_legal_moves(current_player)
         board.print_board()
         if not actions:

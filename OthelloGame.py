@@ -18,7 +18,7 @@ class OthelloGame():
         while True:
             # Player 1's turn
             start_time = time.time()
-            player1_action = self.player1.play(board, 1, player1_time)
+            player1_action = self.player1.play(board.board, 1, player1_time)
             end_time = time.time()
             player1_time -= (end_time - start_time)
             
@@ -32,7 +32,7 @@ class OthelloGame():
             
             # Player 2's turn
             start_time = time.time()
-            player2_action = self.player2.play(board, -1, player2_time)
+            player2_action = self.player2.play(board.board, -1, player2_time)
             end_time = time.time()
             player2_time -= (end_time - start_time)
             
@@ -62,3 +62,11 @@ class OthelloGame():
                     print("The game is a tie!")    
                 break
             
+    def getNextState(self, board, player, action):
+        # if player takes action on board, return next (board,player)
+        # action must be a valid move
+        if action == None:
+            return None
+        b = OthelloBoard(board)
+        new_b = b.execute_move(action, player)
+        return (new_b.board, -player)
